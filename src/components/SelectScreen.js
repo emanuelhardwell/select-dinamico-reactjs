@@ -35,7 +35,7 @@ export const SelectScreen = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log(e);
+    console.log(e.target.value);
     setData({ ...data, [name]: value });
   };
 
@@ -77,7 +77,7 @@ export const SelectScreen = () => {
               value={articulo}
               onChange={handleInputChange}
             >
-              {/* <option value="-2"> Selecciona tu articulo </option> */}
+              <option value="hokla"> Selecciona tu articulo </option>
               {articulos > -1 &&
                 categorias[articulos].articulos.map((item, i) => (
                   <option key={i} value={i}>
