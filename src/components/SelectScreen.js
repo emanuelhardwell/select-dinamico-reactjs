@@ -19,15 +19,24 @@ const categorias = [
 export const SelectScreen = () => {
   const [articulos, setArticulos] = useState(-1);
 
+  const initialState = {
+    categoria: "",
+    articulo: "",
+  };
+
   const handleCargarArticulos = (e) => {
     const opcion = e.target.value;
     console.log(opcion);
     setArticulos(opcion);
   };
 
-  const initialState = {
-    categoria: "",
-    articulo: "",
+  const [data, setData] = useState(initialState);
+  const { categoria, articulo } = data;
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    console.log(e);
+    setData({ ...data, [name]: value });
   };
 
   // return ********************************
@@ -41,7 +50,9 @@ export const SelectScreen = () => {
               className="form-select"
               id="floatingSelect"
               aria-label="Floating label select example"
-              name="categorias"
+              name="categoria"
+              value={categoria}
+              onChange={handleInputChange}
               onClick={handleCargarArticulos}
             >
               <option value={-1}> Selecciona tu categoria </option>
@@ -62,7 +73,9 @@ export const SelectScreen = () => {
               className="form-select"
               id="floatingSelect2"
               aria-label="Floating label select example"
-              name="articulos"
+              name="articulo"
+              value={articulo}
+              onChange={handleInputChange}
             >
               {/* <option value="-2"> Selecciona tu articulo </option> */}
               {articulos > -1 &&
