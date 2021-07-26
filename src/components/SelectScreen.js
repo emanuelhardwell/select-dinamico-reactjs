@@ -112,12 +112,12 @@ const informacion = [
     ],
   },
 ];
-// console.log(informacion);
+// console.log(informacion[0]);
 
 export const SelectScreen = () => {
   const [articulos, setArticulos] = useState(-1);
 
-  const initialState = {
+  let initialState = {
     categoria: "",
     articulo: "",
     descripcion: "",
@@ -125,14 +125,32 @@ export const SelectScreen = () => {
     total: "",
   };
 
+  const [data, setData] = useState(initialState);
+  let { categoria, articulo, descripcion, cantidad, total } = data;
+
   const handleCargarArticulos = (e) => {
     const opcion = e.target.value;
-    console.log(opcion);
+    // console.log(opcion);
     setArticulos(opcion);
   };
 
-  const [data, setData] = useState(initialState);
-  const { categoria, articulo, descripcion, cantidad, total } = data;
+  const handleCargarTotal = (e) => {
+    console.log(e.target.value);
+    let cantidad = e.target.value;
+    let l = categoria;
+    let j = articulo;
+    let arrayArticulos = informacion[l].articulos;
+    console.log(arrayArticulos);
+
+    const resultado = arrayArticulos.find(
+      (item) => item.nombre === j || item.nombre === "otro"
+    );
+    let res = resultado.precio * cantidad;
+    // total = res;
+    setData({ ...data, cantidad: cantidad, total: res });
+    console.log(resultado);
+    console.log(res);
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -178,7 +196,7 @@ export const SelectScreen = () => {
                   >
                     <option value={-1}> Selecciona tu categoria </option>
                     {informacion.map((item, i) => (
-                      <option key={i} value={i}>
+                      <option key={i} value={item.categorias.id}>
                         {item.categorias.nombre}
                       </option>
                     ))}
@@ -196,7 +214,7 @@ export const SelectScreen = () => {
                     value={articulo}
                     onChange={handleInputChange}
                   >
-                    <option value="hola"> Selecciona tu articulo </option>
+                    <option value=""> Selecciona tu articulo </option>
                     {articulos > -1 &&
                       informacion[articulos].articulos.map((item, i) => (
                         <option key={i} value={item.nombre}>
@@ -230,7 +248,10 @@ export const SelectScreen = () => {
                     placeholder="a"
                     name="cantidad"
                     value={cantidad}
-                    onChange={handleInputChange}
+                    onChange={(e) => {
+                      handleInputChange(e);
+                      handleCargarTotal(e);
+                    }}
                   />
                   <label htmlFor="floatingInput9"> Cantidad </label>
                 </div>
