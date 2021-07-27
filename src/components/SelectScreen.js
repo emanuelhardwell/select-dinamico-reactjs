@@ -130,26 +130,26 @@ export const SelectScreen = () => {
 
   const handleCargarArticulos = (e) => {
     const opcion = e.target.value;
-    // console.log(opcion);
+    console.log(opcion);
     setArticulos(opcion);
   };
 
   const handleCargarTotal = (e) => {
     console.log(e.target.value);
     let cantidad = e.target.value;
-    let l = categoria;
-    let j = articulo;
-    let arrayArticulos = informacion[l].articulos;
+    let categoriaFinal = categoria;
+    let articuloFinal = articulo;
+    let arrayArticulos = informacion[categoriaFinal].articulos;
     console.log(arrayArticulos);
 
     const resultado = arrayArticulos.find(
-      (item) => item.nombre === j || item.nombre === "otro"
+      (item) => item.nombre === articuloFinal || item.nombre === "otro"
     );
     let res = resultado.precio * cantidad;
     // total = res;
     setData({ ...data, cantidad: cantidad, total: res });
-    console.log(resultado);
-    console.log(res);
+    // console.log(resultado);
+    // console.log(res);
   };
 
   const handleInputChange = (e) => {
@@ -164,7 +164,7 @@ export const SelectScreen = () => {
   const handleSubmitForm = (e) => {
     e.preventDefault();
 
-    if (categoria === "" || categoria === -1) {
+    if (categoria === "" || categoria === "-1" || categoria === -1) {
       return Swal.fire("Error", "Selecciona una categoria y articulo", "error");
     }
 
@@ -174,6 +174,12 @@ export const SelectScreen = () => {
 
     console.log(data);
   };
+
+  if (categoria === -1 || categoria === "-1") {
+    console.log("Se cumplio");
+    cantidad = 0;
+    total = 0;
+  }
 
   // return ********************************
   return (
@@ -242,6 +248,7 @@ export const SelectScreen = () => {
                 <h3> Cantidad </h3>
                 <div className="form-floating mb-2">
                   <input
+                    disabled={categoria === "-1" ? true : false}
                     type="number"
                     className="form-control"
                     id="floatingInput9"
