@@ -120,12 +120,13 @@ export const SelectScreen = () => {
     clave: "",
     producto: "",
     descripcion: "",
+    unidad: "",
     cantidad: "",
     total: "",
   };
 
   const [data, setData] = useState(initialState);
-  let { clave, producto, descripcion, cantidad, total } = data;
+  let { clave, producto, descripcion, unidad, cantidad, total } = data;
 
   const handleCargarProductos = (e) => {
     const opcion = e.target.value;
@@ -136,6 +137,7 @@ export const SelectScreen = () => {
       cantidad: "",
       total: "",
       descripcion: "",
+      unidad: "",
     });
 
     const resultado = informacion.find((item) => item.claves.nombre === opcion);
@@ -146,6 +148,16 @@ export const SelectScreen = () => {
     }
   };
 
+  const handleVerificarProducto = (e) => {
+    setData({
+      ...data,
+      cantidad: "",
+      total: "",
+      descripcion: "",
+      unidad: "",
+    });
+  };
+
   const handleCargarTotal = (e) => {
     let cantidad = e.target.value;
     let productoFinal = producto;
@@ -154,8 +166,14 @@ export const SelectScreen = () => {
       (item) => item.nombre === productoFinal || item.nombre === "otro"
     );
     let res = resultado.precio * cantidad;
-
-    setData({ ...data, cantidad: cantidad, total: res });
+    let unidadFinal = resultado.unidad;
+    console.log(unidadFinal);
+    setData({
+      ...data,
+      cantidad: cantidad,
+      total: res,
+      unidad: unidadFinal,
+    });
   };
 
   const handleInputChange = (e) => {
@@ -215,6 +233,7 @@ export const SelectScreen = () => {
                     name="producto"
                     value={producto}
                     onChange={handleInputChange}
+                    onClick={handleVerificarProducto}
                   >
                     <option value=""> Selecciona tu producto </option>
                     {arrayProductos.map((item, i) => (
@@ -243,7 +262,6 @@ export const SelectScreen = () => {
                 <h3> Cantidad </h3>
                 <div className="form-floating mb-2">
                   <input
-                    disabled={clave === "-1" ? true : false}
                     type="number"
                     className="form-control"
                     id="floatingInput9"
@@ -270,6 +288,21 @@ export const SelectScreen = () => {
                     onChange={handleInputChange}
                   />
                   <label htmlFor="floatingInput1"> Total </label>
+                </div>
+
+                <h3> Unidad </h3>
+                <div className="form-floating mb-2">
+                  <input
+                    disabled={true}
+                    type="text"
+                    className="form-control"
+                    id="floatingInput3"
+                    placeholder="a"
+                    name="unidad"
+                    value={unidad}
+                    onChange={handleInputChange}
+                  />
+                  <label htmlFor="floatingInput3"> Unidad </label>
                 </div>
 
                 <div className="d-grid gap-2">
