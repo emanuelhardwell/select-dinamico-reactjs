@@ -3,11 +3,11 @@ import Swal from "sweetalert2";
 
 const informacion = [
   {
-    categorias: {
+    claves: {
       id: 0,
       nombre: "preliminares",
     },
-    articulos: [
+    productos: [
       {
         nombre: "suministro y colocacion de letrero",
         unidad: "pza",
@@ -22,11 +22,11 @@ const informacion = [
     ],
   },
   {
-    categorias: {
+    claves: {
       id: 1,
       nombre: "azotea",
     },
-    articulos: [
+    productos: [
       { nombre: "excavacion a cielo abierto", unidad: "m3", precio: 212 },
       { nombre: "retiro de material de excavacion", unidad: "m3", precio: 296 },
       {
@@ -70,11 +70,11 @@ const informacion = [
     ],
   },
   {
-    categorias: {
+    claves: {
       id: 2,
       nombre: "estructura primer nivel",
     },
-    articulos: [
+    productos: [
       { nombre: "castillo k armado con 4 varillas", unidad: "ml", precio: 292 },
       {
         nombre: "castillo k2 armado con 4 varillas ",
@@ -112,91 +112,70 @@ const informacion = [
     ],
   },
 ];
-// console.log(informacion[0]);
 
 export const SelectScreen = () => {
-  const [articulos, setArticulos] = useState(-1);
-  let [datoPro, setDatoPro] = useState("");
+  const [arrayProductos, setArrayProductos] = useState([]);
 
   let initialState = {
-    categoria: "",
-    articulo: "",
+    clave: "",
+    producto: "",
     descripcion: "",
     cantidad: "",
     total: "",
   };
 
   const [data, setData] = useState(initialState);
-  let { categoria, articulo, descripcion, cantidad, total } = data;
+  let { clave, producto, descripcion, cantidad, total } = data;
 
-  const handleCargarArticulos = (e) => {
+  const handleCargarProductos = (e) => {
     const opcion = e.target.value;
-    // console.log(opcion);
-    setArticulos(opcion);
 
-    let index = e.target.selectedIndex;
-    let datoMax = e.target.options[index].getAttribute("data-key");
-    setDatoPro(datoMax);
-    console.log(datoMax);
-    const resultado = informacion.find(
-      (item) => item.categorias.nombre === datoMax
-    );
+    setData({
+      ...data,
+      producto: "",
+      cantidad: "",
+      total: "",
+      descripcion: "",
+    });
+
+    const resultado = informacion.find((item) => item.claves.nombre === opcion);
     if (resultado !== undefined) {
-      const r2 = resultado.articulos;
-      console.log(r2);
+      const resultadoFinal = resultado.productos;
+      // console.log(resultadoFinal);
+      setArrayProductos(resultadoFinal);
     }
-    // const r2 = resultado.articulos;
-    // console.log(resultado);
-    console.log(resultado);
   };
 
   const handleCargarTotal = (e) => {
-    console.log(e.target.value);
     let cantidad = e.target.value;
-    let categoriaFinal = categoria;
-    let articuloFinal = articulo;
-    let arrayArticulos = informacion[categoriaFinal].articulos;
-    console.log(arrayArticulos);
+    let productoFinal = producto;
 
-    const resultado = arrayArticulos.find(
-      (item) => item.nombre === articuloFinal || item.nombre === "otro"
+    const resultado = arrayProductos.find(
+      (item) => item.nombre === productoFinal || item.nombre === "otro"
     );
     let res = resultado.precio * cantidad;
-    // total = res;
+
     setData({ ...data, cantidad: cantidad, total: res });
-    console.log(resultado);
-    // console.log(res);
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    // let index = e.target.selectedIndex;
-    // let dato = e.target.options[index].text;
-    // let datoPro = e.target.options[index].getAttribute("data-key");
-    // console.log(e.target);
     setData({ ...data, [name]: value });
   };
 
   const handleSubmitForm = (e) => {
     e.preventDefault();
 
-    if (categoria === "" || categoria === "-1" || categoria === -1) {
-      return Swal.fire("Error", "Selecciona una categoria y articulo", "error");
+    if (clave === "" || clave === "-1" || clave === -1) {
+      return Swal.fire("Error", "Selecciona una clave y producto", "error");
     }
 
-    if (articulo === "") {
-      return Swal.fire("Error", "Selecciona una categoria y articulo", "error");
+    if (producto === "") {
+      return Swal.fire("Error", "Selecciona una clave y producto", "error");
     }
-    console.log(datoPro);
-    data.categoriaNombre = datoPro;
+
     console.log(data);
   };
-
-  if (categoria === -1 || categoria === "-1") {
-    console.log("Se cumplio");
-    cantidad = 0;
-    total = 0;
-  }
 
   // return ********************************
   return (
@@ -212,19 +191,15 @@ export const SelectScreen = () => {
                     className="form-select"
                     id="floatingSelect"
                     aria-label="Floating label select example"
-                    name="categoria"
-                    value={categoria}
+                    name="clave"
+                    value={clave}
                     onChange={handleInputChange}
-                    onClick={handleCargarArticulos}
+                    onClick={handleCargarProductos}
                   >
-                    <option value={-1}> Selecciona tu categoria </option>
+                    <option value={-1}> Selecciona tu clave </option>
                     {informacion.map((item, i) => (
-                      <option
-                        key={i}
-                        value={item.categorias.id}
-                        data-key={item.categorias.nombre}
-                      >
-                        {item.categorias.nombre}
+                      <option key={i} value={item.claves.nombre}>
+                        {item.claves.nombre}
                       </option>
                     ))}
                   </select>
@@ -237,17 +212,16 @@ export const SelectScreen = () => {
                     className="form-select"
                     id="floatingSelect2"
                     aria-label="Floating label select example"
-                    name="articulo"
-                    value={articulo}
+                    name="producto"
+                    value={producto}
                     onChange={handleInputChange}
                   >
-                    <option value=""> Selecciona tu articulo </option>
-                    {articulos > -1 &&
-                      informacion[articulos].articulos.map((item, i) => (
-                        <option key={i} value={item.nombre}>
-                          {item.nombre}
-                        </option>
-                      ))}
+                    <option value=""> Selecciona tu producto </option>
+                    {arrayProductos.map((item, i) => (
+                      <option key={i} value={item.nombre}>
+                        {item.nombre}
+                      </option>
+                    ))}
                   </select>
                   <label htmlFor="floatingSelect2"> Articulos </label>
                 </div>
@@ -269,7 +243,7 @@ export const SelectScreen = () => {
                 <h3> Cantidad </h3>
                 <div className="form-floating mb-2">
                   <input
-                    disabled={categoria === "-1" ? true : false}
+                    disabled={clave === "-1" ? true : false}
                     type="number"
                     className="form-control"
                     id="floatingInput9"
