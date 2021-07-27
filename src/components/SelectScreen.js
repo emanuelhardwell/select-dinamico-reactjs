@@ -148,6 +148,7 @@ export const SelectScreen = () => {
     }
   };
 
+  // metodo que espera el cambio del SELECT de los productos
   const handleVerificarProducto = (e) => {
     setData({
       ...data,
