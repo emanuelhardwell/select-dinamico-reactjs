@@ -116,6 +116,7 @@ const informacion = [
 
 export const SelectScreen = () => {
   const [articulos, setArticulos] = useState(-1);
+  let [datoPro, setDatoPro] = useState("");
 
   let initialState = {
     categoria: "",
@@ -130,8 +131,23 @@ export const SelectScreen = () => {
 
   const handleCargarArticulos = (e) => {
     const opcion = e.target.value;
-    console.log(opcion);
+    // console.log(opcion);
     setArticulos(opcion);
+
+    let index = e.target.selectedIndex;
+    let datoMax = e.target.options[index].getAttribute("data-key");
+    setDatoPro(datoMax);
+    console.log(datoMax);
+    const resultado = informacion.find(
+      (item) => item.categorias.nombre === datoMax
+    );
+    if (resultado !== undefined) {
+      const r2 = resultado.articulos;
+      console.log(r2);
+    }
+    // const r2 = resultado.articulos;
+    // console.log(resultado);
+    console.log(resultado);
   };
 
   const handleCargarTotal = (e) => {
@@ -148,7 +164,7 @@ export const SelectScreen = () => {
     let res = resultado.precio * cantidad;
     // total = res;
     setData({ ...data, cantidad: cantidad, total: res });
-    // console.log(resultado);
+    console.log(resultado);
     // console.log(res);
   };
 
@@ -171,7 +187,8 @@ export const SelectScreen = () => {
     if (articulo === "") {
       return Swal.fire("Error", "Selecciona una categoria y articulo", "error");
     }
-
+    console.log(datoPro);
+    data.categoriaNombre = datoPro;
     console.log(data);
   };
 
@@ -202,7 +219,11 @@ export const SelectScreen = () => {
                   >
                     <option value={-1}> Selecciona tu categoria </option>
                     {informacion.map((item, i) => (
-                      <option key={i} value={item.categorias.id}>
+                      <option
+                        key={i}
+                        value={item.categorias.id}
+                        data-key={item.categorias.nombre}
+                      >
                         {item.categorias.nombre}
                       </option>
                     ))}
